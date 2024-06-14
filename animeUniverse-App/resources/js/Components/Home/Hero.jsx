@@ -31,14 +31,13 @@ function Hero() {
     };
 
     return (
-        <div className='mt-[120px] bg-slate-400'>
+        <div className='mt-[0px] bg-white'>
             {selectedMangaId ? (
                 <MangaDetail mangaId={selectedMangaId} />
             ) : (
-                <div className='flex flex-wrap m-20 gap-4'>
+                <div className='flex flex-wrap mx-20 py-[100px] items-center justify-center gap-4'>
                     {mangaData && mangaData.data && mangaData.data.map((manga) => (
                         <div key={manga.id} className='shadow-lg scale-100 hover:scale-110 transition-all ease-in-out w-[240px] h-[420px] overflow-hidden flex flex-col items-center justify-center'>
-                            <h1 className="text-[20px] text-center cursor-pointer text-white text-ellipsis overflow-hidden" onClick={() => handleMangaClick(manga.id)}>{manga.attributes.title?.en}</h1>
                             {/* <p className="text-black text-[12px]">{manga.attributes.description?.en}</p> */}
                             {manga.relationships &&
                                 manga.relationships.length > 0 &&
@@ -47,6 +46,7 @@ function Hero() {
                                         <CoverImage key={relationship.id} coverArtId={relationship.id} mangaId={manga.id} />
                                     ) : null
                             )}
+                            <h1 className="text-[12px] text-center cursor-pointer text-black overflow-hidden truncate" onClick={() => handleMangaClick(manga.id)}>{manga.attributes.title?.en}</h1>
                         </div>
                     ))}
                 </div>
@@ -86,7 +86,7 @@ const CoverImage = ({ coverArtId, mangaId }) => {
     }, []);
 
     return coverFileName ? (
-        <img src={`https://uploads.mangadex.org/covers/${mangaId}/${coverFileName}?t=${currentTime}.jpg`} alt="Manga Cover" className="w-[200px] h-auto" />
+        <img src={`https://uploads.mangadex.dev/covers/${mangaId}/${coverFileName}?t=${currentTime}.jpg`} alt="Manga Cover" className="w-[200px] h-[340px] object-cover" />
     ) : (
         <div>Loading cover...</div>
     );

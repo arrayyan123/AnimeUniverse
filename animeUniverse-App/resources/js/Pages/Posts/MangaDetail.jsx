@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button } from "flowbite-react";
-// import LoadingScreen from '@/Components/Loading/LoadingScreen';
 
-const BASE_URL = 'https://api.mangadex.org/manga';
+const BASE_URL = 'https://api.mangadex.dev/manga';
+const URL_SECON = 'https://api.mangadex.dev';
 
 function MangaDetail({ mangaId }) {
     const [mangaDetail, setMangaDetail] = useState(null);
@@ -23,7 +23,7 @@ function MangaDetail({ mangaId }) {
                 const resp = await axios.get(`${BASE_URL}/${mangaId}`);
                 setMangaDesc(resp.data);
             } catch (error){
-                console.error('Error fetching manga detail:', error);
+                console.error('Error fetching manga description:', error);
             }
         }
 
@@ -31,22 +31,26 @@ function MangaDetail({ mangaId }) {
         fetchMangaDetail();
     }, [mangaId]);
 
+    const goToChapter = (chapterId) => {
+        window.location.href = `/chapter/${chapterId}`;
+    };
+
     return (
-        <div className='w-[100vw] overflow-hidden'>
-            {mangaDesc && mangaDesc.data && mangaDesc.data.attributes? (
-                <div key={mangaDesc.data.id} className='w-[80%] mb-[4%] overflow-hidden flex flex-row items-center justify-center mx-[10%]'>
+        <div className='w-[100vw] py-[130px] overflow-hidden'>
+            {mangaDesc && mangaDesc.data && mangaDesc.data.attributes ? (
+                <div key={mangaDesc.data.id} className='w-[80%] mb-[4%] overflow-hidden flex md:flex-row flex-col items-center justify-center mx-[10%]'>
                     <div className='flex flex-col gap-4'>
-                        <h1 className="text-[40px] font-bold cursor-pointer">{mangaDesc.data.attributes.title?.en}</h1>
+                        <h1 className="text-[30px] font-extrabold cursor-pointer">{mangaDesc.data.attributes.title?.en}</h1>
                         <p className="text-black text-[16px] text-justify">{mangaDesc.data.attributes.description?.en}</p>
                         <div className=''>
-                            <h1 className='text-[30px] font-bold'>Alternative Titles</h1>
+                            <h1 className='text-[20px] font-bold'>Alternative Titles</h1>
                             <ul>
                                 {mangaDesc.data.attributes.altTitles && mangaDesc.data.attributes.altTitles.map((altTitle, index) => (
                                     <li key={index} className='text-[15px]'>{Object.values(altTitle).join(", ")}</li>
                                 ))}
                             </ul>
                         </div>
-                        <a href="/"><Button color="blue">Back To Home</Button></a>
+                        <a href="/" className='md:mx-0 mx-[120px]'><Button color="blue">Back To Home</Button></a>
                     </div>
                     
                     {mangaDesc.data.relationships && mangaDesc.data.relationships.length > 0 && mangaDesc.data.relationships.map((relationship) => (
@@ -62,20 +66,23 @@ function MangaDetail({ mangaId }) {
             )}
             {mangaDetail && mangaDetail.data && mangaDetail.data.length > 0 ? (
                 <div className='flex flex-col w-[80%] mx-[10%] gap-4'>
-                    {mangaDetail.data.map((chapter) => (
-                        <div key={chapter.id} className=' shadow-lg cursor-pointer'>
-                            <h1 className='text-[30px] font-bold'>  
-                                <span>{chapter.attributes.title}</span>  
-                            </h1>
-                            <p>
-                                <span>Ch. {chapter.attributes.chapter}</span>
-                            </p>
-                            <p>
-                                <span>{chapter.attributes.translatedLanguage}</span>
-                            </p>
-                        </div>
-                    ))}
-                    {/* <pre>{JSON.stringify(mangaDetail, null, 2)}</pre> */}
+                    {mangaDetail.data
+                        // .filter(chapter => chapter.attributes.translatedLanguage === 'en')
+                        .sort((a, b) => parseFloat(a.attributes.chapter) - parseFloat(b.attributes.chapter))
+                        .map((chapter) => (
+                            <div key={chapter.id} className='shadow-lg cursor-pointer bg-slate-200 p-4 rounded-lg' onClick={() => goToChapter(chapter.id)}>
+                                <h1 className='text-[20px] font-bold'>  
+                                    <span>{chapter.attributes.title}</span>  
+                                </h1>
+                                <p>
+                                    <span>Ch. {chapter.attributes.chapter}</span>
+                                </p>
+                                <p>
+                                    <span>{chapter.attributes.translatedLanguage}</span>
+                                </p>
+                            </div>
+                        ))
+                    }
                 </div>
                 
             ) : (
@@ -94,25 +101,20 @@ function MangaDetail({ mangaId }) {
 }
 
 const CoverImage = ({ coverArtId, mangaId }) => {
-    const [coverFileName, setCoverFileName] = useState(null);
-    const [currentTime, setCurrentTime] = useState(Date.now()); 
+    const [coverFileName, setCoverFileName] = useState('');
+    const [currentTime, setCurrentTime] = useState(Date.now());
 
     useEffect(() => {
-        const fetchCoverFileName = async () => {
+        const fetchCoverImage = async () => {
             try {
-                const coverResponse = await axios.get(`/api/cover/${coverArtId}`, {
-                    headers: {
-                        'User-Agent': 'MyMangaApp/1.0'
-                    }
-                });
-                const imageUrl = coverResponse.data.imageUrl;
-                setCoverFileName(imageUrl);
+                const resp = await axios.get(`https://api.mangadex.dev/cover/${coverArtId}`);
+                setCoverFileName(resp.data.data.attributes.fileName);
             } catch (error) {
-                console.error('Error fetching cover data:', error);
+                console.error('Error fetching cover image:', error);
             }
         };
 
-        fetchCoverFileName();
+        fetchCoverImage();
     }, [coverArtId]);
 
     useEffect(() => {
@@ -124,7 +126,7 @@ const CoverImage = ({ coverArtId, mangaId }) => {
     }, []);
 
     return coverFileName ? (
-        <img src={`https://uploads.mangadex.org/covers/${mangaId}/${coverFileName}?t=${currentTime}.jpg`} alt="Manga Cover" className="w-[200px] h-auto"/>
+        <img src={`https://uploads.mangadex.dev/covers/${mangaId}/${coverFileName}?t=${currentTime}.jpg`} alt="Manga Cover" className="w-[200px] h-[340px] object-cover md:ml-4 ml-0 md:mt-0 mt-4"/>
     ) : (
         <div>Loading cover...</div>
     );

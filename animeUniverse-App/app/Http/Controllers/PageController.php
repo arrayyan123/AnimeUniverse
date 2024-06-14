@@ -15,4 +15,7 @@ class PageController extends Controller
     {
         return Inertia::render('Posts/MangaDetail', ['mangaId' => $mangaId]);
     }
+    public function chapter($chapterId) {
+        return Inertia::render('Posts/ChapterPage', ['chapterId' => $chapterId]);
+    }
 }

@@ -55,4 +55,15 @@ class MangaController extends Controller
             return response()->json(['error' => 'Failed to fetch manga chapters: ' . $e->getMessage()], 500);
         }
     }
+
+    public function getChapterImages($chapterId)
+    {
+        try{
+            $response = Http::withHeaders([
+                'User-Agent' => 'MyMangaApp/1.0',
+            ])->get($this->baseUrl . '/at-home/server/' . $chapterId . '/feed');
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to fetch chapters Images: ' . $e->getMessage()], 500);
+        }
+    }
 }
