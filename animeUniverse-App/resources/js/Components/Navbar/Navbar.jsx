@@ -35,7 +35,7 @@ function Navbar({ setSelectedMangaId }) {
     try {
       const response = await axios.get(`/api/mangadex-proxy?title=${searchQuery}`);
       const data = response.data;
-      console.log('Fetched Manga Data:', data);  // Logging data for debugging
+      console.log('Fetched Manga Data:', data);
       setSearchResults(data.data || []);
     } catch (error) {
       console.error('Error fetching manga data:', error);
