@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button } from "flowbite-react";
 
-const BASE_URL = 'https://api.mangadex.dev/manga';
-const URL_SECON = 'https://api.mangadex.dev';
+const BASE_URL = 'https://api.mangadex.org/manga';
+const URL_SECON = 'https://api.mangadex.org';
 
 function MangaDetail({ mangaId }) {
     const [mangaDetail, setMangaDetail] = useState(null);
@@ -107,7 +107,7 @@ const CoverImage = ({ coverArtId, mangaId }) => {
     useEffect(() => {
         const fetchCoverImage = async () => {
             try {
-                const resp = await axios.get(`https://api.mangadex.dev/cover/${coverArtId}`);
+                const resp = await axios.get(`https://api.mangadex.org/cover/${coverArtId}`);
                 setCoverFileName(resp.data.data.attributes.fileName);
             } catch (error) {
                 console.error('Error fetching cover image:', error);
@@ -126,7 +126,7 @@ const CoverImage = ({ coverArtId, mangaId }) => {
     }, []);
 
     return coverFileName ? (
-        <img src={`https://uploads.mangadex.dev/covers/${mangaId}/${coverFileName}?t=${currentTime}.jpg`} alt="Manga Cover" className="w-[200px] h-[340px] object-cover md:ml-4 ml-0 md:mt-0 mt-4"/>
+        <img src={`https://uploads.mangadex.org/covers/${mangaId}/${coverFileName}?t=${currentTime}.jpg`} alt="Manga Cover" className="w-[200px] h-[340px] object-cover md:ml-4 ml-0 md:mt-0 mt-4"/>
     ) : (
         <div>Loading cover...</div>
     );

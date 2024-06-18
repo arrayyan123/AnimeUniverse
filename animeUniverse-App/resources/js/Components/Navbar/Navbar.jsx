@@ -134,7 +134,7 @@ const CoverImage = ({ manga }) => {
             }
           });
           if (response.data && response.data.imageUrl) {
-            setCoverUrl(`https://uploads.mangadex.dev/covers/${manga.id}/${response.data.imageUrl}`);
+            setCoverUrl(`https://uploads.mangadex.org/covers/${manga.id}/${response.data.imageUrl}`);
           } else {
             console.error('File name not found in cover art data:', response.data);
           }

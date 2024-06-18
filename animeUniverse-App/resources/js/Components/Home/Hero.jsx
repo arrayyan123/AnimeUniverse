@@ -86,7 +86,7 @@ const CoverImage = ({ coverArtId, mangaId }) => {
     }, []);
 
     return coverFileName ? (
-        <img src={`https://uploads.mangadex.dev/covers/${mangaId}/${coverFileName}?t=${currentTime}.jpg`} alt="Manga Cover" className="w-[200px] h-[340px] object-cover" />
+        <img src={`https://uploads.mangadex.org/covers/${mangaId}/${coverFileName}?t=${currentTime}.jpg`} alt="Manga Cover" className="w-[200px] h-[340px] object-cover" />
     ) : (
         <div>Loading cover...</div>
     );

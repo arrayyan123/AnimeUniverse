@@ -11,7 +11,7 @@ import { Keyboard, Pagination, Navigation } from 'swiper/modules';
 import { Head } from '@inertiajs/react';
 import AlertOne from '@/Components/Alert/AlertOne';
 
-const URL_SECON = 'https://api.mangadex.dev';
+const URL_SECON = 'https://api.mangadex.org';
 
 const ChapterPage = ({ chapterId }) => {
     const [chapterImageUrls, setChapterImageUrls] = useState([]);
