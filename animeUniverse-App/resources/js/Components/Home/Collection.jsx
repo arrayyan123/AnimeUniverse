@@ -66,8 +66,8 @@ function Collection() {
                                                     <CoverImage key={relationship.id} coverArtId={relationship.id} mangaId={manga.id} />
                                                 ) : null
                                         )}
-                                        <div className='absolute bottom-0 w-full h-full md:pt-[20%] pt-[70%] cursor-pointer text-white bg-black bg-opacity-50 px-20'>
-                                            <div className='flex md:flex-row gap-6 items-center'>
+                                        <div className='absolute bottom-0 w-full h-full md:pt-[20%] pt-[60%] cursor-pointer text-white bg-black bg-opacity-50 px-20'>
+                                            <div className='flex md:flex-row flex-col gap-6 items-center'>
                                                 {manga.relationships &&
                                                 manga.relationships.length > 0 &&
                                                 manga.relationships.map((relationship) =>
@@ -76,10 +76,21 @@ function Collection() {
                                                     ) : null
                                                 )}
                                                 <div>
-                                                    <h1 className="font-extrabold text-[30px] " onClick={() => handleMangaClick(manga.id)}>
+                                                    <h1 
+                                                        className="font-extrabold text-[30px] md:text-left text-center " 
+                                                        onClick={() => handleMangaClick(manga.id)}
+                                                        onKeyDown={(e) => { 
+                                                            if (e.key === "Enter") { 
+                                                                this.setState({ message: e.target.value }, 
+                                                                () => { 
+                                                                    handleMangaClick(manga.id); 
+                                                                }); 
+                                                            } 
+                                                        }}
+                                                    >
                                                         {manga.attributes.title?.en}
                                                     </h1>
-                                                    <p className="text-white text-[20px]">
+                                                    <p className="text-white text-[20px] md:block hidden">
                                                         {manga.attributes.description?.en}
                                                     </p>
                                                 </div>
